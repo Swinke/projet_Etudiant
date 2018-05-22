@@ -1,0 +1,62 @@
+SQL> 
+SQL> PROMPT Contenu des tables
+Contenu des tables
+SQL> DELETE FROM DOSSIERPATIENT;
+
+5 rows deleted.
+
+SQL> DELETE FROM DOCTEUR;
+
+2 rows deleted.
+
+SQL> DELETE FROM CONSULTATION;
+
+0 rows deleted.
+
+SQL> DELETE FROM ORDONNANCECHIRURGIE;
+
+4 rows deleted.
+
+SQL> DELETE FROM ORDONNANCEMEDICAMENTS;
+
+4 rows deleted.
+
+SQL> DELETE FROM ORDONNANCE;
+
+15 rows deleted.
+
+SQL> DELETE FROM CHIRURGIE;
+
+4 rows deleted.
+
+SQL> DELETE FROM SPECIALISATIONSALLE;
+
+5 rows deleted.
+
+SQL> DELETE FROM SALLE;
+
+4 rows deleted.
+
+SQL> DELETE FROM TYPECHIRURGIE;
+
+5 rows deleted.
+
+SQL> DELETE FROM MEDICAMENT;
+
+8 rows deleted.
+
+SQL> DELETE FROM SPECIALITE;
+
+5 rows deleted.
+
+SQL> DELETE FROM CATEGORIES;
+
+4 rows deleted.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> SPOOL OFF;

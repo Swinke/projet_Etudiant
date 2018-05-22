@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16 avr. 2018 17:18:25 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entite.Categories" table="CATEGORIES" schema="SYSTEM" optimistic-lock="version">
+        <id name="idcategorie" type="big_decimal">
+            <column name="IDCATEGORIE" precision="22" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQUENCE_CATMED</param>
+            </generator>
+        </id>
+        <property name="nom" type="string">
+            <column name="NOM" length="45" not-null="true" unique="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" />
+        </property>
+        <set name="medicaments" table="MEDICAMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CATEGORIE" precision="22" scale="0" />
+            </key>
+            <one-to-many class="entite.Medicament" />
+        </set>
+    </class>
+</hibernate-mapping>

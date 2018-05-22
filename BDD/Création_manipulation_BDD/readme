@@ -1,0 +1,13 @@
+--- Détails du programme ---
+
+Programme illustrant la création, la manipulation et le mapping d'une base de donnée oracle. Creéation de la base de donnée via un cript sql, test d'insertion ainsi que de requête 
+via Java DataBase Connectivity et Hibernate (mapping).
+
+--- Lancement du programme ---
+
+Néccessite oracle database
+
+Lancez les scripts "create.sql" et "insert.sql",présent dans le dossier script, pour créer et insérer un jeu de données.
+Pur JDBC et Hibernate vous trouverez les projets à importer dans app_java. 
+
+  

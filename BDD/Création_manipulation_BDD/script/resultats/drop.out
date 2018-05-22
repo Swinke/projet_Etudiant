@@ -1,0 +1,123 @@
+SQL> 
+SQL> Prompt Suppression des séquences
+Suppression des séquences
+SQL> DROP SEQUENCE SEQUENCE_MED;
+
+Sequence dropped.
+
+SQL> DROP SEQUENCE SEQUENCE_SALLE;
+
+Sequence dropped.
+
+SQL> DROP SEQUENCE SEQUENCE_NUMDOS;
+
+Sequence dropped.
+
+SQL> DROP SEQUENCE SEQUENCE_CHIRURGIE;
+
+Sequence dropped.
+
+SQL> DROP SEQUENCE SEQUENCE_TYPECHIR;
+
+Sequence dropped.
+
+SQL> DROP SEQUENCE SEQUENCE_CATMED;
+
+Sequence dropped.
+
+SQL> DROP SEQUENCE SEQUENCE_NUMORD;
+
+Sequence dropped.
+
+SQL> 
+SQL> Prompt Suppression des tables
+Suppression des tables
+SQL> DROP TABLE DOCTEUR CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE CONSULTATION CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE ORDONNANCECHIRURGIE;
+
+Table dropped.
+
+SQL> DROP TABLE CHIRURGIE;
+
+Table dropped.
+
+SQL> DROP TABLE SPECIALISATIONSALLE;
+
+Table dropped.
+
+SQL> DROP TABLE ORDONNANCEMEDICAMENTS;
+
+Table dropped.
+
+SQL> DROP TABLE MEDICAMENT;
+
+Table dropped.
+
+SQL> DROP TABLE TYPECHIRURGIE;
+
+Table dropped.
+
+SQL> DROP TABLE SALLE;
+
+Table dropped.
+
+SQL> DROP TABLE CATEGORIES;
+
+Table dropped.
+
+SQL> DROP TABLE ORDONNANCE;
+
+Table dropped.
+
+SQL> DROP TABLE DOSSIERPATIENT CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE SPECIALITE;
+
+Table dropped.
+
+SQL> 
+SQL> Prompt Suppression des vues
+Suppression des vues
+SQL> DROP VIEW NB_CONS_DOCTEUR;
+
+View dropped.
+
+SQL> DROP VIEW NB_CHIRURGIE_DOCTEUR;
+
+View dropped.
+
+SQL> DROP VIEW NB_CONS_AN;
+
+View dropped.
+
+SQL> DROP VIEW NB_CONS_MOY_MOIS;
+
+View dropped.
+
+SQL> DROP VIEW NB_CONS_SPECIALITE;
+
+View dropped.
+
+SQL> DROP VIEW NB_MED_DOCTEUR;
+
+View dropped.
+
+SQL> DROP VIEW NB_MED_DOCTEUR_AN;
+
+View dropped.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SPOOL OFF;

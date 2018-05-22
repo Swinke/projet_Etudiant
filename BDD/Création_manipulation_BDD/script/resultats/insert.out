@@ -1,0 +1,365 @@
+SQL> 
+SQL> Prompt Format de la date
+Format de la date
+SQL> ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY';
+
+Session altered.
+
+SQL> 
+SQL> 
+SQL> -- Insertion de valeurs initiales pour les tests --
+SQL> -- Insertion de TYPECHIRURGIE (types de chirurgie)
+SQL> 
+SQL> 	 INSERT INTO TYPECHIRURGIE (idType,nom,description)
+  2  	     VALUES(SEQUENCE_TYPECHIR.NEXTVAL,'Chirurgie coeur','Chirurgie du système cardiaque');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO TYPECHIRURGIE (idType,nom,description)
+  2  	     VALUES(SEQUENCE_TYPECHIR.NEXTVAL,'Chirurgie rein','Chirurgie du système rénale');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO TYPECHIRURGIE (idType,nom,description)
+  2  	     VALUES(SEQUENCE_TYPECHIR.NEXTVAL,'Chirurgie poumon','Chirurgie du système respiratoire');
+
+1 row created.
+
+SQL> 
+SQL> 	     INSERT INTO TYPECHIRURGIE (idType,nom,description)
+  2  	     VALUES(SEQUENCE_TYPECHIR.NEXTVAL,'Chirurgie cerveau','Chirurgie du cérébrale');
+
+1 row created.
+
+SQL> 
+SQL> -- Insertion de SALLE
+SQL> 
+SQL> 	 INSERT INTO SALLE (idSalle,nom)
+  2  	     VALUES(SEQUENCE_SALLE.NEXTVAL,'A-22');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO SALLE (idSalle,nom)
+  2  	     VALUES(SEQUENCE_SALLE.NEXTVAL,'A-24');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO SALLE (idSalle,nom)
+  2  	     VALUES(SEQUENCE_SALLE.NEXTVAL,'B-12');
+
+1 row created.
+
+SQL> 
+SQL> Prompt Insertion de SPECIALISATIONSALLE
+Insertion de SPECIALISATIONSALLE
+SQL> 	 -- Coeur,A-22
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idType,idSalle)
+  2  	 VALUES(1,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 -- Rein,A-24
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idType,idSalle)
+  2  	 VALUES(2,2);
+
+1 row created.
+
+SQL> 
+SQL> 	 -- Poumon,B-12
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idType,idSalle)
+  2  	 VALUES(3,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 -- Cerveau, B-12
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idType,idSalle)
+  2  	 VALUES(4,3);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- Insertion de CATEGORIES (catégories de médicaments)
+SQL> 
+SQL> 	 INSERT INTO CATEGORIES (idCategorie,nom,description)
+  2  	     VALUES(SEQUENCE_CATMED.NEXTVAL,'PRODUITS NATURELS','Produit d''origine végétale');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CATEGORIES (idCategorie,nom,description)
+  2  	     VALUES(SEQUENCE_CATMED.NEXTVAL,'ANALGÉSIQUES','Qui supprime ou atténue la sensibilité à la douleur');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CATEGORIES (idCategorie,nom,description)
+  2  	     VALUES(SEQUENCE_CATMED.NEXTVAL,'VITAMINES','Substance organique indispensable à l''organisme, apportée en petite quantité par l''alimentation');
+
+1 row created.
+
+SQL> 
+SQL> -- Insertion de MEDICAMENT
+SQL> 
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Teinture Achillée',10.99,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Teinture Echinacea',9.99,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Teinture Molène',11.99,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Ibuprofène',5.99,2);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Acétaminophène',3.99,2);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Vitamine C',15.45,3);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Vitamine A',5.89,3);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- Insertion de SPECIALITE (spécialités médicales)
+SQL> 
+SQL> 	 INSERT INTO SPECIALITE (code,titre,description)
+  2  	     VALUES('IMMUNO','Immunologie','Étude du système immunitaire');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO SPECIALITE (code,titre,description)
+  2  	     VALUES('CARDIO','Cardiologie','Étudie le cœur et ses maladies');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO SPECIALITE (code,titre,description)
+  2  	     VALUES('DERMATO','Dermatologie','Branche de la médecine qui s''occupe de la peau, des muqueuses et des phanères');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO SPECIALITE (code,titre,description)
+  2  	     VALUES('GASTRO','Gastro-entérologie','Étudie le système digestif et ses maladies');
+
+1 row created.
+
+SQL> 
+SQL> Prompt Insertion de DOCTEUR
+Insertion de DOCTEUR
+SQL> 
+SQL> 	 INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau,nbrPatients)
+  2  	 VALUES ('KENO','Kenobi','Obi-Wan','CARDIO','Laval','666 rue de Tatooine','Docteur',0);
+
+1 row created.
+
+SQL> 
+SQL> 	 --- Étudiant
+SQL> 	 INSERT INTO DOCTEUR (matricule,nomM,prenomM,ville,adresse,niveau)
+  2  	 VALUES ('TREJ','Tremblay','Jean','Saguenay','100 rue des bleuets','Etudiant');
+
+1 row created.
+
+SQL> 
+SQL> 	 -- Vérification du nombre de patients initialisé à zéro
+SQL> 	 INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau)
+  2  	 VALUES ('PALS','Palpatine','Sheev','IMMUNO','Coruscant','999 avenue Galactique','Docteur');
+
+1 row created.
+
+SQL> 
+SQL> Prompt Insertion de DOSSIERPATIENT
+Insertion de DOSSIERPATIENT
+SQL> 
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Skywalker','Anakin','M','SKYA12345678','01-07-2050','PALS');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Amidala','Padme','F','AMIP12345678','01-07-2055','KENO');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Solo','Han','M','SOLH12345678','01-07-2085','KENO');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Buzz','Eclair','M','BUZE12345354','01-07-1992','KENO');
+
+1 row created.
+
+SQL> 
+SQL> Prompt Insertion d ORDONNANCE
+Insertion d ORDONNANCE
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+  2  	 VALUES (SEQUENCE_NUMORD.NEXTVAL,'Pose d''un nouveaux respirateur','Chirurgie');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+  2  	 VALUES (SEQUENCE_NUMORD.NEXTVAL,'3 fois par jour','Medicaments');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+  2  	 VALUES (SEQUENCE_NUMORD.NEXTVAL,'Greffe du coeur','Chirurgie');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+  2  	 VALUES (SEQUENCE_NUMORD.NEXTVAL,'2 fois par semaine','Medicaments');
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+  2  	 VALUES (SEQUENCE_NUMORD.NEXTVAL,'opération tumeur','Chirurgie');
+
+1 row created.
+
+SQL> 
+SQL> Prompt Insertion de CONSULTATION
+Insertion de CONSULTATION
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,diagnostic,numOrd)
+  2  	 VALUES ('PALS',1,'Insufisance pulmonaire',1);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,diagnostic,numOrd)
+  2  	 VALUES ('KENO',2,'Problème d''anxiété',2);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,diagnostic,numOrd)
+  2  	 VALUES ('PALS',3,'Souffle au coeur important',3);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,diagnostic,numOrd)
+  2  	 VALUES ('PALS',2,'Problème peau',4);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,diagnostic,numOrd)
+  2  	 VALUES ('KENO',4,'tumeur bénine',5);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> Prompt Insertion CHIRURGIE
+Insertion CHIRURGIE
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,3,1,'01-01-2018',1600,2000);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,1,1,'01-12-2018',0700,1200);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,4,3,'12-01-2018',1600,2000);
+
+1 row created.
+
+SQL> 
+SQL> Prompt Insertion ORDONNANCECHIRURGIE
+Insertion ORDONNANCECHIRURGIE
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+  2  	 VALUES (1,1,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+  2  	 VALUES (3,2,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+  2  	 VALUES (5,1,3);
+
+1 row created.
+
+SQL> 
+SQL> Prompt Insertion ORDONNANCEMEDICAMENTS
+Insertion ORDONNANCEMEDICAMENTS
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (2,1,10);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (4,2,2);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (1,2,1);
+
+1 row created.
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (1,3,100);
+
+1 row created.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> SPOOL OFF;

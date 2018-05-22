@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16 avr. 2018 17:18:25 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entite.Salle" table="SALLE" schema="SYSTEM" optimistic-lock="version">
+        <id name="idsalle" type="big_decimal">
+            <column name="IDSALLE" precision="22" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQUENCE_SALLE</param>
+            </generator>
+        </id>
+        <property name="nom" type="string">
+            <column name="NOM" length="45" not-null="true" unique="true" />
+        </property>
+        <set name="specialisationsalles" table="SPECIALISATIONSALLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="IDSALLE" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="entite.Specialisationsalle" />
+        </set>
+    </class>
+</hibernate-mapping>

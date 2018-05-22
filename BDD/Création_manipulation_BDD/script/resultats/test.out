@@ -1,0 +1,753 @@
+SQL> 
+SQL> -- Insertion de valeurs erronnées pour les tests --
+SQL> -- Insertion de TYPECHIRURGIE (types de chirurgie)
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO TYPECHIRURGIE (idType,nom,description)
+  2  	     VALUES(1,'Chirurgie yeux','Chirurgie des yeux');
+    INSERT INTO TYPECHIRURGIE (idType,nom,description)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRETYPECHIRURGIE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null)
+SQL> 	 INSERT INTO TYPECHIRURGIE (idType,description)
+  2  	     VALUES(5,'Chirurgie des yeux');
+    INSERT INTO TYPECHIRURGIE (idType,description)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."TYPECHIRURGIE"."NOM") 
+
+
+SQL> 
+SQL> -- Insertion de SALLE
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO SALLE (idSalle,nom)
+  2  	     VALUES(1,'C-99');
+    INSERT INTO SALLE (idSalle,nom)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRESALLE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null)
+SQL> 	 INSERT INTO SALLE (idSalle)
+  2  	     VALUES(99);
+    INSERT INTO SALLE (idSalle)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."SALLE"."NOM") 
+
+
+SQL> 
+SQL> Prompt Insertion de SPECIALISATIONSALLE
+Insertion de SPECIALISATIONSALLE
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idSalle,idType)
+  2  	 VALUES('1',1);
+    INSERT INTO SPECIALISATIONSALLE (idSalle,idType)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRESPECSALLE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idSalle,idType)
+  2  	 VALUES(1,'1');
+    INSERT INTO SPECIALISATIONSALLE (idSalle,idType)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRESPECSALLE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 -- Clé déjà existante
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idSalle,idType)
+  2  	 VALUES(1,1);
+    INSERT INTO SPECIALISATIONSALLE (idSalle,idType)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRESPECSALLE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé primaire not null
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idType)
+  2  	 VALUES(2);
+    INSERT INTO SPECIALISATIONSALLE (idType)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."SPECIALISATIONSALLE"."IDSALLE") 
+
+
+SQL> 
+SQL> 	 INSERT INTO SPECIALISATIONSALLE (idSalle)
+  2  	 VALUES(2);
+    INSERT INTO SPECIALISATIONSALLE (idSalle)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."SPECIALISATIONSALLE"."IDTYPE") 
+
+
+SQL> 
+SQL> 
+SQL> -- Insertion de CATEGORIES (catégories de médicaments)
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO CATEGORIES (idCategorie,nom)
+  2  	     VALUES(3,'ANTIBIOTIQUES');
+    INSERT INTO CATEGORIES (idCategorie,nom)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRECATEGORIE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null)
+SQL> 	 INSERT INTO CATEGORIES (idCategorie,description)
+  2  	     VALUES(99,'Substance naturelle ou synthétique qui détruit ou bloque la croissance des bactéries');
+    INSERT INTO CATEGORIES (idCategorie,description)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."CATEGORIES"."NOM") 
+
+
+SQL> 
+SQL> -- Insertion de MEDICAMENT
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(1,'Vitamine C',15.45,3);
+    INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIREMEDICAMENT) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Vitamine C',15.45,99);
+    INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERECATEGORIE) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation prix < 0
+SQL> 	 INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,'Vitamine A',-1.99,3);
+    INSERT INTO MEDICAMENT (idMed,nomMed,prix,categorie)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFPRIXSUPEGALZERO) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null)
+SQL> 	 INSERT INTO MEDICAMENT (idMed,prix,categorie)
+  2  	 VALUES(SEQUENCE_MED.NEXTVAL,1.99,3);
+    INSERT INTO MEDICAMENT (idMed,prix,categorie)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."MEDICAMENT"."NOMMED") 
+
+
+SQL> 
+SQL> 
+SQL> -- Insertion de SPECIALITE (spécialités médicales)
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO SPECIALITE (code,titre,description)
+  2  	     VALUES('GASTRO','Gastéropode','Classe animale des escargots');
+    INSERT INTO SPECIALITE (code,titre,description)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRESPECIALITE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null)
+SQL> 	 INSERT INTO SPECIALITE (code,description)
+  2  	     VALUES('PODIA','Branche de la médecine qui s''occupe des pieds');
+    INSERT INTO SPECIALITE (code,description)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."SPECIALITE"."TITRE") 
+
+
+SQL> 
+SQL> Prompt Insertion de DOCTEUR
+Insertion de DOCTEUR
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau)
+  2  	 VALUES ('KENO','Kenneth','Oppel','GASTRO','Port Alberni','666 rue de Tatooine','Interne');
+    INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIREDOCTEUR) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère
+SQL> 	 INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau)
+  2  	 VALUES ('WINM','Windu','Mace','VISION','Coruscant','999 avenue Galactique','Etudiant');
+    INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERESPECIALITE) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null) MANQUE LE NOM
+SQL> 	 INSERT INTO DOCTEUR (matricule,prenomM,specialite,ville,adresse,niveau)
+  2  	 VALUES ('WINM','Mace','VISION','Coruscant','999 avenue Galactique','Etudiant');
+    INSERT INTO DOCTEUR (matricule,prenomM,specialite,ville,adresse,niveau)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."DOCTEUR"."NOMM") 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null) MANQUE LE PRENOM
+SQL> 	 INSERT INTO DOCTEUR (matricule,nomM,specialite,ville,adresse,niveau)
+  2  	 VALUES ('WINM','Windu','VISION','Coruscant','999 avenue Galactique','Etudiant');
+    INSERT INTO DOCTEUR (matricule,nomM,specialite,ville,adresse,niveau)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."DOCTEUR"."PRENOMM") 
+
+
+SQL> 
+SQL> 	 -- test de violation valeurs définies pour le champ niveau
+SQL> 	 INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau,nbrPatients)
+  2  	 VALUES ('KENU','Kenobi','Obi-Wan','CARDIO','Québec','666 rue de Tatooine','Maitre Jedi',0);
+    INSERT INTO DOCTEUR (matricule,nomM,prenomM,specialite,ville,adresse,niveau,nbrPatients)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFNIVEAUDOCTEUR) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation nbrPatients < 0
+SQL> 	 UPDATE DOCTEUR SET nbrPatients = -1 WHERE matricule = 'PALS';
+    UPDATE DOCTEUR SET nbrPatients = -1 WHERE matricule = 'PALS'
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFNBPATIENTSUPEGALEZERO) violated 
+
+
+SQL> 
+SQL> 
+SQL> Prompt Insertion de DOSSIERPATIENT
+Insertion de DOSSIERPATIENT
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (1,'Skywalker','Anakin','M','SKYA12345678','01-07-2050','PALS');
+    INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIREDOSSIERPATIENT) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé unique numAS
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Skywalker','Anakin','M','SKYA12345678','01-07-2050','PALS');
+    INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.UNIQUENUMASS) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Skywalker','Anakin','M','SKYA01234567','01-07-2050','NOOB');
+    INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGEREMATRICULE) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation du type DATE
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Skywalker','Anakin','M','SKYA12345678','31-06-2050','PALS');
+    VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Skywalker','Anakin','M','SKYA12345678','31-06-2050','PALS')
+                                                                            *
+ERROR at line 2:
+ORA-01839: date not valid for month specified 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null) MANQUE LE NOM
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Anakin','M','SKYA12345678','01-07-2050','PALS');
+    INSERT INTO DOSSIERPATIENT (numDos,prenomP,genre,numAS,dateNaiss,matricule)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."DOSSIERPATIENT"."NOMP") 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null) MANQUE LE PRENOM
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Skywalker','M','SKYA12345678','01-07-2050','PALS');
+    INSERT INTO DOSSIERPATIENT (numDos,nomP,genre,numAS,dateNaiss,matricule)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."DOSSIERPATIENT"."PRENOMP") 
+
+
+SQL> 
+SQL> 	 -- test de violation valeurs définies pour le champ GENRE
+SQL> 	 INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+  2  	 VALUES (SEQUENCE_NUMDOS.NEXTVAL,'Solo','Han','I','SOLH12345678','01-07-2085','KENO');
+    INSERT INTO DOSSIERPATIENT (numDos,nomP,prenomP,genre,numAS,dateNaiss,matricule)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFGENREPATIENT) violated 
+
+
+SQL> 
+SQL> Prompt Insertion d ORDONNANCE
+Insertion d ORDONNANCE
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+  2  	 VALUES (1,'Pose d''un nouveaux respirateur','Chirurgie');
+    INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRENUMORD) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation valeurs définies pour le champ type
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+  2  	 VALUES (SEQUENCE_NUMORD.NEXTVAL,'3 fois par jour','Midicaman');
+    INSERT INTO ORDONNANCE (numOrd,recommandations,type)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFTYPEORDONNANCE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation du type DATE
+SQL> 	 INSERT INTO ORDONNANCE (numOrd,recommandations,type,dateC)
+  2  	 VALUES (SEQUENCE_NUMORD.NEXTVAL,'3 fois par jour','Midicaman','31-31-2000');
+    VALUES (SEQUENCE_NUMORD.NEXTVAL,'3 fois par jour','Midicaman','31-31-2000')
+                                                                  *
+ERROR at line 2:
+ORA-01843: not a valid month 
+
+
+SQL> 
+SQL> Prompt Insertion de CONSULTATION
+Insertion de CONSULTATION
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère codeDocteur
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,diagnostic,numOrd)
+  2  	 VALUES ('XXXX',2,TO_DATE('17/12/2018','DD/MM/YYYY'),'Problème d''anxiété',2);
+    INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,diagnostic,numOrd)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERECONSDOC) violated - parent 
+key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère numDos
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,diagnostic,numOrd)
+  2  	 VALUES ('PALS',0,TO_DATE('17/12/2018','DD/MM/YYYY'),'Souffle au coeur important',3);
+    INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,diagnostic,numOrd)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERECONSNUMDOS) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère numOrd
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,diagnostic,numOrd)
+  2  	 VALUES ('KENO',4,TO_DATE('17/12/2018','DD/MM/YYYY'),'tumeur bénine',99);
+    INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,diagnostic,numOrd)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERECONSNUMORD) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation champ obligatoire (not null) diagnostic
+SQL> 	 INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,numOrd)
+  2  	 VALUES ('PALS',2,TO_DATE('17/12/2018','DD/MM/YYYY'),4);
+    INSERT INTO CONSULTATION (codeDocteur,numDos,dateC,numOrd)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."CONSULTATION"."DIAGNOSTIC") 
+
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> Prompt Insertion CHIRURGIE
+Insertion CHIRURGIE
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (1,3,1,'01-01-2018',1600,2000);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIRECHIRURGIE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère idType
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,99,1,'01-12-2018',0700,1200);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERETYPECHIRURGIESALLE) 
+violated - parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère idSalle
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,1,99,'12-01-2018',1600,2000);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERETYPECHIRURGIESALLE) 
+violated - parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation HeureDebut positif
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,4,3,'14-01-2018',-1,10);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.HEUREDEBUTPOS) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation HeureFin positif et supérieur 0
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,4,3,'14-01-2018',1600,-1);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFHEUREDEBUTPGHEUREFIN) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation HeureFin positif et supérieur 0
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,4,3,'14-01-2018',0,0);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFHEUREDEBUTPGHEUREFIN) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation HeureFin >=23h59
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,4,3,'14-01-2018',1600,2400);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.HEUREFINVRAISEMBLABLE) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation HeureDebut >= HeureFin
+SQL> 	 INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+  2  	 VALUES (SEQUENCE_CHIRURGIE.NEXTVAL,4,3,'14-01-2018',1200,1100);
+    INSERT INTO CHIRURGIE (idChir,idType,idSalle,dateChirurgie,HeureDebut,HeureFin)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFHEUREDEBUTPGHEUREFIN) violated 
+
+
+SQL> 
+SQL> 
+SQL> Prompt Insertion ORDONNANCECHIRURGIE
+Insertion ORDONNANCECHIRURGIE
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (idChir,rang)
+  2  	 VALUES (1,2);
+    INSERT INTO ORDONNANCECHIRURGIE (idChir,rang)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."ORDONNANCECHIRURGIE"."NUMORD") 
+
+
+SQL> 
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (numOrd,rang)
+  2  	 VALUES (1,2);
+    INSERT INTO ORDONNANCECHIRURGIE (numOrd,rang)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."ORDONNANCECHIRURGIE"."IDCHIR") 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère numOrd
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+  2  	 VALUES (99,1,2);
+    INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERENUMORDCHIR) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère idChir
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+  2  	 VALUES (1,99,2);
+    INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.UNIQUEORDCHIRRANG) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation Unique Ordonnance Chirurgie Rang
+SQL> 	 INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+  2  	 VALUES (1,2,1);
+    INSERT INTO ORDONNANCECHIRURGIE (numOrd,idChir,rang)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIREORDCHIR) violated 
+
+
+SQL> 
+SQL> Prompt Insertion ORDONNANCEMEDICAMENTS
+Insertion ORDONNANCEMEDICAMENTS
+SQL> 
+SQL> 	 -- test de violation de la clé primaire
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (2,1,10);
+    INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.CLEPRIMAIREORDMED) violated 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère numOrd
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (99,2,1);
+    INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGERENUMORDMED) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation de la clé étrangère iMed
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (1,99,1);
+    INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.CLEETRANGEREMEDICAMENT) violated - 
+parent key not found 
+
+
+SQL> 
+SQL> 	 -- test de violation nbBoites < 0
+SQL> 	 INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+  2  	 VALUES (4,2,-1);
+    INSERT INTO ORDONNANCEMEDICAMENTS (numOrd,idMed,nbBoites)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.VERIFNBBOITESUPEGALEZERO) violated 
+
+
+SQL> 
+SQL> Prompt suppression consultation interdite si ordonnance
+suppression consultation interdite si ordonnance
+SQL> 	 SELECT * FROM CONSULTATION WHERE numOrd = 1;
+
+CODEDOCTEUR                                       NUMDOS DATEC                  
+--------------------------------------------- ---------- ----------             
+DIAGNOSTIC                                                                      
+--------------------------------------------------------------------------------
+    NUMORD                                                                      
+----------                                                                      
+PALS                                                   1 25-04-2018             
+Insufisance pulmonaire                                                          
+         1                                                                      
+                                                                                
+
+SQL> 	 DELETE FROM ORDONNANCE WHERE numOrd = 1;
+    DELETE FROM ORDONNANCE WHERE numOrd = 1
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.CLEETRANGERENUMORDMED) violated - child 
+record found 
+
+
+SQL> 	 SELECT * FROM CONSULTATION WHERE numOrd = 1;
+
+CODEDOCTEUR                                       NUMDOS DATEC                  
+--------------------------------------------- ---------- ----------             
+DIAGNOSTIC                                                                      
+--------------------------------------------------------------------------------
+    NUMORD                                                                      
+----------                                                                      
+PALS                                                   1 25-04-2018             
+Insufisance pulmonaire                                                          
+         1                                                                      
+                                                                                
+
+SQL> 
+SQL> Prompt suppression medicament interdite si ordonnance
+suppression medicament interdite si ordonnance
+SQL> 	 SELECT * FROM ORDONNANCE WHERE numOrd = 1;
+
+    NUMORD                                                                      
+----------                                                                      
+RECOMMANDATIONS                                                                 
+--------------------------------------------------------------------------------
+TYPE                                          DATEC                             
+--------------------------------------------- ----------                        
+         1                                                                      
+Pose d'un nouveaux respirateur                                                  
+Chirurgie                                     25-04-2018                        
+                                                                                
+
+SQL> 	 DELETE FROM MEDICAMENT WHERE idMed = 2;
+    DELETE FROM MEDICAMENT WHERE idMed = 2
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.CLEETRANGEREMEDICAMENT) violated - 
+child record found 
+
+
+SQL> 	 SELECT * FROM ORDONNANCE WHERE numOrd = 1;
+
+    NUMORD                                                                      
+----------                                                                      
+RECOMMANDATIONS                                                                 
+--------------------------------------------------------------------------------
+TYPE                                          DATEC                             
+--------------------------------------------- ----------                        
+         1                                                                      
+Pose d'un nouveaux respirateur                                                  
+Chirurgie                                     25-04-2018                        
+                                                                                
+
+SQL> 
+SQL> Prompt dossierpatient.matricule = null sur suppression docteur
+dossierpatient.matricule = null sur suppression docteur
+SQL> 
+SQL> 	 SELECT * FROM DOSSIERPATIENT WHERE  matricule = 'PALS';
+
+    NUMDOS NOMP                                                                 
+---------- ---------------------------------------------                        
+PRENOMP                                       G NUMAS        DATENAISS          
+--------------------------------------------- - ------------ ----------         
+DATEC      MATRICULE                                                            
+---------- ---------------------------------------------                        
+         1 Skywalker                                                            
+Anakin                                        M SKYA12345678 01-07-2050         
+25-04-2018 PALS                                                                 
+                                                                                
+
+SQL> 	 DELETE FROM DOCTEUR WHERE matricule = 'PALS';
+
+1 row deleted.
+
+SQL> 	 SELECT * FROM DOSSIERPATIENT WHERE  numDos = 1;
+
+    NUMDOS NOMP                                                                 
+---------- ---------------------------------------------                        
+PRENOMP                                       G NUMAS        DATENAISS          
+--------------------------------------------- - ------------ ----------         
+DATEC      MATRICULE                                                            
+---------- ---------------------------------------------                        
+         1 Skywalker                                                            
+Anakin                                        M SKYA12345678 01-07-2050         
+25-04-2018                                                                      
+                                                                                
+
+SQL> 
+SQL> Prompt suppression des consultations sur suppression dossierpatient
+suppression des consultations sur suppression dossierpatient
+SQL> 	 SELECT * FROM CONSULTATION WHERE numDos = 2;
+
+CODEDOCTEUR                                       NUMDOS DATEC                  
+--------------------------------------------- ---------- ----------             
+DIAGNOSTIC                                                                      
+--------------------------------------------------------------------------------
+    NUMORD                                                                      
+----------                                                                      
+KENO                                                   2 25-04-2018             
+Problème d'anxiété                                                           
+         2                                                                      
+                                                                                
+
+SQL> 	 DELETE FROM DOSSIERPATIENT WHERE nomP = 'Amidala';
+
+1 row deleted.
+
+SQL> 	 SELECT * FROM CONSULTATION WHERE numDos = 2;
+
+no rows selected
+
+SQL> 
+SQL> Prompt suppression des consultations sur suppression DOCTEUR
+suppression des consultations sur suppression DOCTEUR
+SQL> 	 SELECT * FROM CONSULTATION WHERE numDos = 4;
+
+CODEDOCTEUR                                       NUMDOS DATEC                  
+--------------------------------------------- ---------- ----------             
+DIAGNOSTIC                                                                      
+--------------------------------------------------------------------------------
+    NUMORD                                                                      
+----------                                                                      
+KENO                                                   4 25-04-2018             
+tumeur bénine                                                                  
+         5                                                                      
+                                                                                
+
+SQL> 	 DELETE FROM DOCTEUR WHERE matricule = 'KENO';
+
+1 row deleted.
+
+SQL> 	 SELECT * FROM CONSULTATION WHERE numDos = 4;
+
+no rows selected
+
+SQL> 
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> SPOOL OFF;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16 avr. 2018 17:18:25 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entite.Specialisationsalle" table="SPECIALISATIONSALLE" schema="SYSTEM" optimistic-lock="version">
+        <composite-id name="id" class="entite.SpecialisationsalleId">
+            <key-property name="idtype" type="big_decimal">
+                <column name="IDTYPE" precision="22" scale="0" />
+            </key-property>
+            <key-property name="idsalle" type="big_decimal">
+                <column name="IDSALLE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="salle" class="entite.Salle" update="false" insert="false" fetch="select">
+            <column name="IDSALLE" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="typechirurgie" class="entite.Typechirurgie" update="false" insert="false" fetch="select">
+            <column name="IDTYPE" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="datec" type="date">
+            <column name="DATEC" length="7" not-null="true" />
+        </property>
+        <set name="chirurgies" table="CHIRURGIE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="IDTYPE" precision="22" scale="0" not-null="true" />
+                <column name="IDSALLE" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="entite.Chirurgie" />
+        </set>
+    </class>
+</hibernate-mapping>

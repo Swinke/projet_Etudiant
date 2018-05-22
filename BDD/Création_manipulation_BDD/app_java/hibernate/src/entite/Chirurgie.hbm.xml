@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16 avr. 2018 17:18:25 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entite.Chirurgie" table="CHIRURGIE" schema="SYSTEM" optimistic-lock="version">
+        <id name="idchir" type="big_decimal">
+            <column name="IDCHIR" precision="22" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQUENCE_CHIRURGIE</param>
+            </generator>
+        </id>
+        <many-to-one name="specialisationsalle" class="entite.Specialisationsalle" fetch="select">
+            <column name="IDTYPE" precision="22" scale="0" not-null="true" />
+            <column name="IDSALLE" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="datechirurgie" type="date">
+            <column name="DATECHIRURGIE" length="7" not-null="true" />
+        </property>
+        <property name="heuredebut" type="big_decimal">
+            <column name="HEUREDEBUT" precision="22" scale="0" />
+        </property>
+        <property name="heurefin" type="big_decimal">
+            <column name="HEUREFIN" precision="22" scale="0" />
+        </property>
+        <set name="ordonnancechirurgies" table="ORDONNANCECHIRURGIE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="IDCHIR" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="entite.Ordonnancechirurgie" />
+        </set>
+    </class>
+</hibernate-mapping>

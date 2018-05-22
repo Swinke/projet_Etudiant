@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16 avr. 2018 17:18:25 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entite.Docteur" table="DOCTEUR" schema="SYSTEM" optimistic-lock="version">
+        <id name="matricule" type="string">
+            <column name="MATRICULE" length="45" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="specialite" class="entite.Specialite" fetch="select">
+            <column name="SPECIALITE" length="45" />
+        </many-to-one>
+        <property name="nomm" type="string">
+            <column name="NOMM" length="45" not-null="true" />
+        </property>
+        <property name="prenomm" type="string">
+            <column name="PRENOMM" length="45" not-null="true" />
+        </property>
+        <property name="ville" type="string">
+            <column name="VILLE" length="45" />
+        </property>
+        <property name="adresse" type="string">
+            <column name="ADRESSE" />
+        </property>
+        <property name="niveau" type="string">
+            <column name="NIVEAU" length="45" />
+        </property>
+        <property name="nbrpatients" type="big_decimal">
+            <column name="NBRPATIENTS" precision="22" scale="0" not-null="true" />
+        </property>
+        <set name="consultations" table="CONSULTATION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CODEDOCTEUR" length="45" not-null="true" />
+            </key>
+            <one-to-many class="entite.Consultation" />
+        </set>
+        <set name="dossierpatients" table="DOSSIERPATIENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MATRICULE" length="45" />
+            </key>
+            <one-to-many class="entite.Dossierpatient" />
+        </set>
+    </class>
+</hibernate-mapping>

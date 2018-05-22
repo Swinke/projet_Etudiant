@@ -1,0 +1,311 @@
+SQL> 
+SQL> Prompt Format de la date
+Format de la date
+SQL> ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY';
+
+Session altered.
+
+SQL> 
+SQL> Prompt Création des séquences
+Création des séquences
+SQL> CREATE SEQUENCE SEQUENCE_MED MINVALUE 1 MAXVALUE 1000 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> CREATE SEQUENCE SEQUENCE_SALLE MINVALUE 1 MAXVALUE 1000 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> CREATE SEQUENCE SEQUENCE_NUMDOS MINVALUE 1 MAXVALUE 1000 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> CREATE SEQUENCE SEQUENCE_CHIRURGIE MINVALUE 1 MAXVALUE 1000 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> CREATE SEQUENCE SEQUENCE_TYPECHIR MINVALUE 1 MAXVALUE 1000 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> CREATE SEQUENCE SEQUENCE_CATMED MINVALUE 1 MAXVALUE 1000 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> CREATE SEQUENCE SEQUENCE_NUMORD MINVALUE 1 MAXVALUE 1000 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> 
+SQL> Prompt Creation des tables
+Creation des tables
+SQL> Prompt Création des tables sans contraintes de clés étrangères
+Création des tables sans contraintes de clés étrangères
+SQL> CREATE TABLE SPECIALITE
+  2  (code VARCHAR(45) NOT NULL,
+  3   titre VARCHAR(45) NOT NULL,
+  4   description VARCHAR(255),
+  5   CONSTRAINT ClePrimaireSpecialite PRIMARY KEY (code),
+  6   CONSTRAINT UniqueTitreSpec UNIQUE (titre)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE SALLE
+  2  (idSalle INTEGER  NOT NULL,
+  3   nom VARCHAR(45) NOT NULL,
+  4   CONSTRAINT ClePrimaireSalle PRIMARY KEY (idSalle),
+  5   CONSTRAINT UniqueNomSalle UNIQUE (nom)
+  6  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE TYPECHIRURGIE
+  2  (idType INTEGER NOT NULL,
+  3   nom VARCHAR(45) NOT NULL, -- Chirurgie et médicament autorisés
+  4   description VARCHAR(255),
+  5   CONSTRAINT ClePrimaireTypeChirurgie PRIMARY KEY (idType),
+  6   CONSTRAINT UniqueTypeChirurgie UNIQUE (nom)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE CATEGORIES
+  2  (idCategorie INTEGER NOT NULL,
+  3   nom VARCHAR(45) NOT NULL,
+  4   description VARCHAR(255),
+  5   CONSTRAINT ClePrimaireCategorie PRIMARY KEY (idCategorie),
+  6   CONSTRAINT UniqueCategorie UNIQUE (nom)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE ORDONNANCE
+  2  (numOrd INTEGER NOT NULL,
+  3  recommandations LONG,-- PERMET BCP DE TEXTE VS VARCHAR(255)
+  4  type VARCHAR(45) NOT NULL,
+  5  dateC DATE DEFAULT SYSDATE NOT NULL, -- Date selon le système
+  6  CONSTRAINT ClePrimaireNumOrd PRIMARY KEY (numOrd),
+  7  CONSTRAINT VerifTypeOrdonnance CHECK (type IN ('Chirurgie','Medicaments'))
+  8  );
+
+Table created.
+
+SQL> 
+SQL> 
+SQL> -- Création des tables avec clés étrangères
+SQL> CREATE TABLE MEDICAMENT
+  2  (idMed INTEGER NOT NULL,
+  3   nomMed VARCHAR(45) NOT NULL,
+  4   prix NUMERIC(8,2) default 0 NOT NULL,-- Le prix varie de 0,00$ à 999 999,00$,
+  5   categorie INTEGER,
+  6   CONSTRAINT ClePrimaireMedicament PRIMARY KEY (idMed),
+  7   CONSTRAINT CleEtrangereCategorie FOREIGN KEY (categorie) REFERENCES CATEGORIES(idCategorie),
+  8   CONSTRAINT UniqueMedCat UNIQUE (nomMed,categorie),
+  9   CONSTRAINT VerifPrixSupEgalZero CHECK (prix >= 0)
+ 10  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE ORDONNANCEMEDICAMENTS
+  2   (numOrd INTEGER NOT NULL,
+  3    idMed INTEGER NOT NULL,
+  4    nbBoites INTEGER default 0 NOT NULL,
+  5   CONSTRAINT ClePrimaireOrdMed PRIMARY KEY (numOrd,idMed),
+  6   CONSTRAINT CleEtrangereMedicament FOREIGN KEY (idMed) REFERENCES MEDICAMENT,
+  7   CONSTRAINT CleEtrangereNumOrdMed FOREIGN KEY (numOrd) REFERENCES ORDONNANCE,
+  8   CONSTRAINT VerifNbBoiteSupEgaleZero CHECK (nbBoites >= 0)
+  9   );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE SPECIALISATIONSALLE
+  2  (idType INTEGER NOT NULL,
+  3   idSalle INTEGER NOT NULL,
+  4   dateC DATE DEFAULT SYSDATE NOT NULL, -- Date selon le système
+  5  CONSTRAINT ClePrimaireSpecSalle PRIMARY KEY (idType,idSalle),
+  6  CONSTRAINT CleEtrangereSpecType FOREIGN KEY (idType) REFERENCES TYPECHIRURGIE,
+  7  CONSTRAINT CleEtrantgereSpecSalle FOREIGN KEY (idSalle) REFERENCES SALLE
+  8  );
+
+Table created.
+
+SQL> 
+SQL>  CREATE TABLE CHIRURGIE
+  2   (idChir INTEGER NOT NULL,
+  3    idType INTEGER NOT NULL,
+  4    idSalle INTEGER NOT NULL,
+  5    dateChirurgie DATE DEFAULT SYSDATE NOT NULL, -- Date selon le système
+  6    HeureDebut INTEGER DEFAULT 0,
+  7    HeureFin INTEGER DEFAULT 0,
+  8    CONSTRAINT ClePrimaireChirurgie PRIMARY KEY (idChir),
+  9    CONSTRAINT CleEtrangereTypeChirurgieSalle FOREIGN KEY (idType,idSalle) REFERENCES SPECIALISATIONSALLE,
+ 10    CONSTRAINT HeureDebutPos CHECK (HeureDebut>=0),
+ 11    CONSTRAINT HeureFinPos CHECK (HeureFin>0),
+ 12    CONSTRAINT HeureFinVraisemblable CHECK (HeureFin<=2359),
+ 13    CONSTRAINT VerifHeureDebutPGHeureFin CHECK ((HeureFin-HeureDebut>0)) -- Heure début < Heure fin
+ 14   );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE ORDONNANCECHIRURGIE
+  2   (numOrd INTEGER NOT NULL,
+  3    idChir INTEGER NOT NULL,
+  4    rang INTEGER DEFAULT 0 NOT NULL,
+  5    CONSTRAINT ClePrimaireOrdChir PRIMARY KEY (numOrd,idChir),
+  6    CONSTRAINT UniqueOrdChirRang UNIQUE (numOrd, rang),
+  7    CONSTRAINT CleEtrangereNumOrdChir FOREIGN KEY (numOrd) REFERENCES ORDONNANCE,
+  8    CONSTRAINT CleEtrangereIdChir FOREIGN KEY (idChir) REFERENCES CHIRURGIE,
+  9    CONSTRAINT VerifRangPos CHECK (rang >=0)
+ 10   );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE DOCTEUR
+  2  (matricule      VARCHAR(45) NOT NULL,
+  3   nomM VARCHAR(45) NOT NULL,
+  4   prenomM VARCHAR(45) NOT NULL,
+  5   specialite VARCHAR(45),
+  6   ville VARCHAR(45),
+  7   adresse VARCHAR(255),
+  8   niveau VARCHAR(45),
+  9   nbrPatients INTEGER DEFAULT 0 NOT NULL,
+ 10   CONSTRAINT ClePrimaireDocteur PRIMARY KEY      (matricule),
+ 11   CONSTRAINT CleEtrangereSpecialite FOREIGN KEY (specialite) REFERENCES SPECIALITE(code),
+ 12   CONSTRAINT VerifNiveauDocteur CHECK (niveau IN ('Etudiant', 'Interne', 'Docteur')),
+ 13   CONSTRAINT VerifNbPatientSupEgaleZero CHECK (nbrPatients >= 0)
+ 14  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE DOSSIERPATIENT
+  2  (numDos INTEGER NOT NULL,
+  3  nomP VARCHAR(45) NOT NULL,
+  4  prenomP VARCHAR(45)  NOT NULL,
+  5  genre CHAR(1) , -- M, F autorisés
+  6  numAS VARCHAR(12), -- Doit être unique
+  7  dateNaiss DATE,
+  8  dateC DATE DEFAULT SYSDATE NOT NULL, -- Date selon le système
+  9  matricule VARCHAR(45),
+ 10  CONSTRAINT ClePrimaireDossierPatient PRIMARY KEY (numDos),
+ 11  CONSTRAINT UniqueNumAss UNIQUE (numAS),
+ 12  CONSTRAINT CleEtrangereMatricule FOREIGN KEY (matricule) REFERENCES DOCTEUR
+ 13  ON DELETE SET NULL,
+ 14  CONSTRAINT VerifGenrePatient CHECK (genre IN ('F','M'))
+ 15  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE CONSULTATION
+  2  (codeDocteur VARCHAR(45) NOT NULL,
+  3  numDos INTEGER NOT NULL,
+  4  dateC DATE DEFAULT SYSDATE NOT NULL, -- Date selon le système
+  5  diagnostic VARCHAR(255) NOT NULL,
+  6  numOrd INTEGER,
+  7  CONSTRAINT ClePrimaireConsultation PRIMARY KEY (codeDocteur,numDos,dateC),
+  8  CONSTRAINT CleEtrangereConsDoc FOREIGN KEY (codeDocteur) REFERENCES DOCTEUR(matricule)
+  9  ON DELETE CASCADE,
+ 10  CONSTRAINT CleEtrangereConsNumDos FOREIGN KEY (numDos) REFERENCES DOSSIERPATIENT
+ 11  ON DELETE CASCADE,
+ 12  CONSTRAINT CleEtrangereConsNumOrd FOREIGN KEY (numOrd) REFERENCES ORDONNANCE
+ 13  );
+
+Table created.
+
+SQL> 
+SQL> 
+SQL> Prompt Cas d'utilisation : Afficher le nombre de consultations par docteur
+Cas d'utilisation : Afficher le nombre de consultations par docteur
+SQL> CREATE VIEW NB_CONS_DOCTEUR AS SELECT matricule, count(matricule) "Nbr consultation"
+  2  FROM DOCTEUR JOIN CONSULTATION ON matricule = CodeDocteur
+  3  GROUP BY matricule
+  4  ORDER BY count(matricule) DESC;
+
+View created.
+
+SQL> 
+SQL> Prompt Cas d'utilisation : Afficher le nombre de chirurgie par docteur
+Cas d'utilisation : Afficher le nombre de chirurgie par docteur
+SQL> CREATE VIEW NB_CHIRURGIE_DOCTEUR AS SELECT t1.matricule, (t1.prenomM ||' '|| t1.nomM) "Docteur",
+  2  COUNT(t4.idChir) "Nbr chirurgie"
+  3  FROM DOCTEUR t1, CONSULTATION t2, ORDONNANCE t3,
+  4  ORDONNANCECHIRURGIE t4
+  5  WHERE t1.matricule = t2.CodeDocteur AND t2.numOrd = t3.numOrd AND t3.numOrd = t4.numOrd
+  6  GROUP BY t1.matricule, (t1.prenomM ||' '|| t1.nomM)
+  7  ORDER BY COUNT(t4.idChir) DESC;
+
+View created.
+
+SQL> 
+SQL> Prompt Cas d'utilisation : Afficher le nombre de consultations par année
+Cas d'utilisation : Afficher le nombre de consultations par année
+SQL> CREATE VIEW NB_CONS_AN AS SELECT EXTRACT(year from DATEC) "annee",
+  2  COUNT(DATEC) "Nbr de consultation par annee"
+  3  FROM CONSULTATION
+  4  GROUP BY EXTRACT(year from DATEC);
+
+View created.
+
+SQL> 
+SQL> Prompt Cas d'utilisation : Afficher le nombre de consultations moyen par mois
+Cas d'utilisation : Afficher le nombre de consultations moyen par mois
+SQL> CREATE VIEW NB_CONS_MOY_MOIS AS SELECT COUNT(DATEC)/12 "Nbr moyen de consultation/mois"
+  2  FROM CONSULTATION;
+
+View created.
+
+SQL> 
+SQL> Prompt Cas d'utilisation : Afficher le nombre de consultations par specialite
+Cas d'utilisation : Afficher le nombre de consultations par specialite
+SQL> CREATE VIEW NB_CONS_SPECIALITE AS SELECT t2.specialite, COUNT(t2.specialite) "Nbr consultations"
+  2  FROM CONSULTATION t1, DOCTEUR t2
+  3  WHERE t1.CodeDocteur = t2.matricule
+  4  GROUP BY t2.specialite
+  5  ORDER BY COUNT(t2.specialite) DESC;
+
+View created.
+
+SQL> 
+SQL> Prompt Cas d'utilisation : Afficher le nombre de médicaments prescrit par docteur
+Cas d'utilisation : Afficher le nombre de médicaments prescrit par docteur
+SQL> CREATE VIEW NB_MED_DOCTEUR AS SELECT CodeDocteur, (prenomM ||' '||nomM) "Docteur",
+  2  count(idMed) "Nbr médicaments prescrits"
+  3  FROM CONSULTATION JOIN ORDONNANCEMEDICAMENTS
+  4  ON ORDONNANCEMEDICAMENTS.numOrd = CONSULTATION.numOrd
+  5  JOIN DOCTEUR
+  6  ON DOCTEUR.matricule = CONSULTATION.CodeDocteur
+  7  GROUP BY CodeDocteur, (prenomM ||' '||nomM)
+  8  ORDER BY count(idMed) DESC;
+
+View created.
+
+SQL> 
+SQL> Prompt Cas d'utilisation : Afficher le nombre de médicaments prescrit par docteur par année
+Cas d'utilisation : Afficher le nombre de médicaments prescrit par docteur par année
+SQL> CREATE VIEW NB_MED_DOCTEUR_AN AS SELECT CodeDocteur, (prenomM ||' '||nomM) "Docteur",
+  2  EXTRACT(year from DATEC) "annee", count(idMed) "Nbr médicaments prescrits"
+  3  FROM CONSULTATION JOIN ORDONNANCEMEDICAMENTS
+  4  ON ORDONNANCEMEDICAMENTS.numOrd = CONSULTATION.numOrd
+  5  JOIN DOCTEUR
+  6  ON DOCTEUR.matricule = CONSULTATION.CodeDocteur
+  7  GROUP BY CodeDocteur,(prenomM ||' '||nomM) ,EXTRACT(year from DATEC);
+
+View created.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> SPOOL OFF;
